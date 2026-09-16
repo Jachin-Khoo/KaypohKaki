@@ -19,7 +19,11 @@ async function fetchNewsDataSingaporeFeed() {
     return cache.items;
   }
 
-  const url = `${BASE_URL}?apikey=${encodeURIComponent(apiKey)}&country=sg&language=en`;
+  // country=sg alone just returns Google News's Singapore edition, which is
+  // mostly reposted global wire stories. Restricting to real Singapore
+  // outlets plus a "Singapore" keyword match gives genuinely local news.
+  const domains = 'channelnewsasia,straitstimes,mothership,businesstimes';
+  const url = `${BASE_URL}?apikey=${encodeURIComponent(apiKey)}&domain=${domains}&q=Singapore&language=en`;
   const res = await fetch(url);
   const body = await res.json();
   if (body.status !== 'success') {
