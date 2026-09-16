@@ -4,6 +4,7 @@
 // described in the project brief — swap classify() for a real LLM call later.
 
 const { XMLParser } = require('fast-xml-parser');
+const { classify, stripHtml } = require('./classify');
 
 const FEED_URL = 'https://www.channelnewsasia.com/api/v1/rss-outbound-feed?_format=xml&category=10416';
 const CACHE_TTL_MS = 5 * 60 * 1000; // be a polite consumer of a third-party feed
@@ -11,29 +12,6 @@ const CACHE_TTL_MS = 5 * 60 * 1000; // be a polite consumer of a third-party fee
 const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '@_' });
 
 let cache = { items: null, fetchedAt: 0 };
-
-const KEYWORD_RULES = [
-  { category: 'housing', label: 'HOUSING', keywords: ['hdb', 'bto', 'flat', 'resale flat', 'condo', 'mnd'] },
-  { category: 'cpf', label: 'CPF', keywords: ['cpf', 'medisave', 'retirement sum', 'srs'] },
-  { category: 'col', label: 'COST OF LIVING', keywords: ['cost of living', 'subsidy', 'subsidies', 'voucher', 'rebate', 'payout', 'cdc voucher'] },
-  { category: 'general', label: 'TAX', keywords: ['iras', 'income tax', 'gst'] },
-  { category: 'general', label: 'PARENTING', keywords: ['baby bonus', 'childcare', 'preschool', 'moe'] },
-  { category: 'general', label: 'HEALTHCARE', keywords: ['medishield', 'moh', 'hospital subsidy'] },
-];
-
-function classify(text) {
-  const lower = text.toLowerCase();
-  for (const rule of KEYWORD_RULES) {
-    if (rule.keywords.some((kw) => lower.includes(kw))) {
-      return { category: rule.category, label: rule.label };
-    }
-  }
-  return { category: 'general', label: 'SINGAPORE' };
-}
-
-function stripHtml(str) {
-  return (str || '').replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
-}
 
 async function fetchCnaSingaporeFeed() {
   const now = Date.now();
