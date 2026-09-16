@@ -4,6 +4,7 @@ const { fetchCnaSingaporeFeed } = require('../services/cnaFeed');
 const { fetchStraitsTimesSingaporeFeed } = require('../services/straitsTimesFeed');
 const { fetchNewsDataSingaporeFeed } = require('../services/newsDataFeed');
 const { fetchGNewsSingaporeFeed, searchGNews } = require('../services/gnewsFeed');
+const { scrapeArticle } = require('../services/articleScraper');
 
 router.get('/', async (req, res) => {
   const results = await Promise.allSettled([
@@ -36,6 +37,21 @@ router.get('/search', async (req, res) => {
     res.json(items);
   } catch (err) {
     res.status(502).json({ error: 'Search failed', detail: err.message });
+  }
+});
+
+router.get('/article', async (req, res) => {
+  const url = req.query.url;
+  if (!url) return res.status(400).json({ error: 'url is required' });
+
+  try {
+    const article = await scrapeArticle(url);
+    res.json(article);
+  } catch (err) {
+    if (err.code === 'UNSAFE_URL') {
+      return res.status(400).json({ error: 'That URL is not allowed' });
+    }
+    res.status(502).json({ error: 'Could not extract this article', detail: err.message });
   }
 });
 

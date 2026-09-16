@@ -152,10 +152,35 @@ function renderFeedCard(a) {
     </div>
     <span style="font-weight:700; font-size:17px; line-height:1.35;">${escapeHtml(a.title)}</span>
     <p style="font-size:14px; line-height:1.6; color: var(--text-muted); margin:0;">${escapeHtml(a.description)}</p>
+    <div class="full-article" style="display:none; font-size:14px; line-height:1.7; color: var(--text-muted); white-space:pre-line; border-top:1px solid var(--border); padding-top:14px; margin-top:2px;"></div>
     <div style="display:flex; align-items:center; gap:18px; padding-top:2px; flex-wrap:wrap;">
-      <a href="${a.link}" target="_blank" rel="noopener" style="font-size:13px; font-weight:700; color: var(--primary);">Read on ${escapeHtml(a.source || 'source')}</a>
+      <span class="read-full-toggle" style="font-size:13px; font-weight:700; color: var(--primary); cursor:pointer;">Read full article</span>
+      <a href="${a.link}" target="_blank" rel="noopener" style="font-size:13px; font-weight:700; color: var(--text-muted);">Open on ${escapeHtml(a.source || 'source')}</a>
       <a href="forum.html" style="font-size:13px; font-weight:700; color: var(--text-muted);">Discuss in community</a>
     </div>`;
+
+  const toggle = card.querySelector('.read-full-toggle');
+  const body = card.querySelector('.full-article');
+  toggle.addEventListener('click', async () => {
+    if (body.style.display !== 'none') {
+      body.style.display = 'none';
+      toggle.textContent = 'Read full article';
+      return;
+    }
+    body.style.display = '';
+    if (!body.dataset.loaded) {
+      body.textContent = 'Loading full article…';
+      const article = await apiFetch(`/feed/article?url=${encodeURIComponent(a.link)}`);
+      if (article && article.content) {
+        body.textContent = article.content;
+        body.dataset.loaded = '1';
+      } else {
+        body.textContent = "Couldn't load the full article — try opening it on the source site instead.";
+      }
+    }
+    toggle.textContent = 'Hide full article';
+  });
+
   return card;
 }
 
