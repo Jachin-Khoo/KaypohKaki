@@ -51,12 +51,20 @@
       <span id="matched-to" style="font-size:13px; color: var(--text-faint);">Matched to: 29, married, BTO owner</span>
     </div>
 
+    <div style="display:flex; align-items:center; gap:8px; border:1.5px solid var(--border-strong); border-radius:9px; padding:9px 14px; background:#fff; max-width:340px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="feed-search-input" type="text" placeholder="Search updates (e.g. HDB, CPF, GST)" style="border:none; outline:none; font-size:13px; font-family:inherit; width:100%; background:transparent; color: var(--text);">
+      <svg id="feed-search-clear" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; cursor:pointer; display:none;"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </div>
+
     <div style="display:flex; gap:10px; flex-wrap:wrap;">
       <div class="chip active" data-feed-filter="all">All</div>
       <div class="chip" data-feed-filter="housing">Housing</div>
       <div class="chip" data-feed-filter="col">Cost of Living</div>
       <div class="chip" data-feed-filter="cpf">CPF</div>
     </div>
+
+    <div id="feed-search-status" style="font-size:13px; color: var(--text-faint); display:none;"></div>
 
     <div id="feed-list" style="display:flex; flex-direction:column; gap:16px;">
 
