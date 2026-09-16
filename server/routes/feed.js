@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const { fetchCnaSingaporeFeed } = require('../services/cnaFeed');
+const { fetchStraitsTimesSingaporeFeed } = require('../services/straitsTimesFeed');
 const { fetchNewsDataSingaporeFeed } = require('../services/newsDataFeed');
 const { fetchGNewsSingaporeFeed, searchGNews } = require('../services/gnewsFeed');
 
 router.get('/', async (req, res) => {
   const results = await Promise.allSettled([
     fetchCnaSingaporeFeed(),
+    fetchStraitsTimesSingaporeFeed(),
     fetchNewsDataSingaporeFeed(),
     fetchGNewsSingaporeFeed(),
   ]);
