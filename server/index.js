@@ -65,7 +65,7 @@ mongoose
   .then(async () => {
     await seedForum();
     app.listen(PORT, () => {
-      console.log(`PolicyPulse SG server running at http://localhost:${PORT}`);
+      console.log(`KaypohKaki server running at http://localhost:${PORT}`);
     });
   })
   .catch((err) => {

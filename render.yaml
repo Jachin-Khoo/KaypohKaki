@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: policypulse-sg-server
+    name: kaypohkaki-server
     runtime: node
     rootDir: server
     plan: free

@@ -42,7 +42,7 @@ async function fetchCnaSingaporeFeed() {
   }
 
   const res = await fetch(FEED_URL, {
-    headers: { 'User-Agent': 'Mozilla/5.0 (compatible; PolicyPulseSG/1.0)' },
+    headers: { 'User-Agent': 'Mozilla/5.0 (compatible; KaypohKaki/1.0)' },
   });
   if (!res.ok) throw new Error(`CNA feed responded ${res.status}`);
   const xml = await res.text();

@@ -1,8 +1,8 @@
 {
-  "name": "policypulse-sg-server",
+  "name": "kaypohkaki-server",
   "version": "1.0.0",
   "private": true,
-  "description": "Express + Mongoose API for the PolicyPulse SG prototype",
+  "description": "Express + Mongoose API for the KaypohKaki prototype",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

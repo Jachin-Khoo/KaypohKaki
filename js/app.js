@@ -1,4 +1,4 @@
-// PolicyPulse SG — prototype interactivity.
+// KaypohKaki — prototype interactivity.
 // Tries the Express + Mongoose API first (same origin, /api/...); if it's not
 // reachable (e.g. viewing the static Cloudflare deploy with no server running)
 // it falls back to localStorage so the demo still works standalone.
