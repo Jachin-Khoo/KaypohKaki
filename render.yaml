@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: policypulse-sg-server
+    runtime: node
+    rootDir: server
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: true
+    envVars:
+      - key: MONGODB_URI
+        sync: false
