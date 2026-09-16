@@ -138,16 +138,48 @@ async function initDashboardPersonalization() {
   }
 }
 
+const TAG_CLASS_BY_CATEGORY = { housing: 'tag-housing', col: 'tag-col', cpf: 'tag-action', general: 'tag-neutral' };
+
+async function initLiveFeed() {
+  const list = document.getElementById('feed-list');
+  if (!list) return;
+  const items = await apiFetch('/feed');
+  if (!items || !items.length) return; // keep the static demo cards as fallback
+
+  list.innerHTML = '';
+  items.forEach((a) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.setAttribute('data-category', a.category);
+    const when = a.pubDate ? new Date(a.pubDate).toLocaleDateString() : '';
+    card.innerHTML = `
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+        <span class="tag ${TAG_CLASS_BY_CATEGORY[a.category] || 'tag-neutral'}">${a.tagLabel}</span>
+        <span style="font-size:12px; color: var(--text-faint);">${a.source} · ${when}</span>
+      </div>
+      <span style="font-weight:700; font-size:17px; line-height:1.35;">${escapeHtml(a.title)}</span>
+      <p style="font-size:14px; line-height:1.6; color: var(--text-muted); margin:0;">${escapeHtml(a.description)}</p>
+      <div style="display:flex; align-items:center; gap:18px; padding-top:2px; flex-wrap:wrap;">
+        <a href="${a.link}" target="_blank" rel="noopener" style="font-size:13px; font-weight:700; color: var(--primary);">Read on CNA</a>
+        <a href="forum.html" style="font-size:13px; font-weight:700; color: var(--text-muted);">Discuss in community</a>
+      </div>`;
+    list.appendChild(card);
+  });
+
+  // re-apply whichever feed filter chip is currently active
+  const activeChip = document.querySelector('[data-feed-filter].active');
+  if (activeChip) activeChip.click();
+}
+
 function initFeedFilter() {
   const chips = document.querySelectorAll('[data-feed-filter]');
-  const cards = document.querySelectorAll('[data-category]');
   if (!chips.length) return;
   chips.forEach((chip) => {
     chip.addEventListener('click', () => {
       chips.forEach((c) => c.classList.remove('active'));
       chip.classList.add('active');
       const filter = chip.getAttribute('data-feed-filter');
-      cards.forEach((card) => {
+      document.querySelectorAll('[data-category]').forEach((card) => {
         const match = filter === 'all' || card.getAttribute('data-category') === filter;
         card.style.display = match ? '' : 'none';
       });
@@ -304,6 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTopicToggles();
   initDashboardPersonalization();
   initFeedFilter();
+  initLiveFeed();
   renderTodos();
   initForum();
 });

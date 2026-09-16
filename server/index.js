@@ -8,6 +8,7 @@ const Thread = require('./models/Thread');
 const profileRoutes = require('./routes/profile');
 const todoRoutes = require('./routes/todos');
 const forumRoutes = require('./routes/forum');
+const feedRoutes = require('./routes/feed');
 
 const app = express();
 app.use(cors());
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use('/api/profile', profileRoutes);
 app.use('/api/todos', todoRoutes);
 app.use('/api/forum', forumRoutes);
+app.use('/api/feed', feedRoutes);
 
 // Serve the static frontend (index.html, signup.html, etc.) from the project root.
 app.use(express.static(path.join(__dirname, '..')));
