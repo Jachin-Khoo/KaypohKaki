@@ -2,19 +2,20 @@ const express = require('express');
 const router = express.Router();
 const { fetchCnaSingaporeFeed } = require('../services/cnaFeed');
 const { fetchNewsDataSingaporeFeed } = require('../services/newsDataFeed');
+const { fetchGNewsSingaporeFeed } = require('../services/gnewsFeed');
 
 router.get('/', async (req, res) => {
-  const [cna, newsData] = await Promise.allSettled([
+  const results = await Promise.allSettled([
     fetchCnaSingaporeFeed(),
     fetchNewsDataSingaporeFeed(),
+    fetchGNewsSingaporeFeed(),
   ]);
 
-  const items = [
-    ...(cna.status === 'fulfilled' ? cna.value : []),
-    ...(newsData.status === 'fulfilled' ? newsData.value : []),
-  ].sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+  const items = results
+    .flatMap((r) => (r.status === 'fulfilled' ? r.value : []))
+    .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
 
-  if (!items.length && cna.status === 'rejected' && newsData.status === 'rejected') {
+  if (!items.length && results.every((r) => r.status === 'rejected')) {
     return res.status(502).json({ error: 'Could not reach any news source' });
   }
 
